@@ -16,8 +16,33 @@ upload_or_url = st.radio("Choose how to provide the image:", ("Upload", "Enter U
 
 if upload_or_url == "Upload":
     # Handle image upload (existing logic)
-    uploaded_file = st.file_uploader("Choose an image to compress", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Choose an image to compress", type=["jpg", "jpeg", "png","avif"])
     # ... (rest of the code for image upload)
+    if uploaded_file is not None:
+        try:
+            image = Image.open(uploaded_file)
+
+            # Display the original image
+            st.image(image, caption="Original Image", use_column_width=True)
+
+            # Compress the image
+            quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
+            compressed_image = io.BytesIO()  # Create an empty BytesIO object
+            image.save(compressed_image, format="JPEG", quality=quality)  # Save to BytesIO
+
+            # Download the compressed image
+            st.download_button(
+                label="Download Compressed Image",
+                data=compressed_image.getvalue(),  # Access compressed data
+                file_name=f"compressed_{uploaded_file.name}",
+                mime="image/jpeg"
+            )
+
+        except Exception as e:
+            st.error(f"Error processing image: {e}")
+    else:
+        st.write("Please upload an image first.")
+
 
 else:
     # Handle image URL input
