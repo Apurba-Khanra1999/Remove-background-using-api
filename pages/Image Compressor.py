@@ -16,24 +16,28 @@ upload_or_url = st.radio("Choose how to provide the image:", ("Upload", "Enter U
 
 if upload_or_url == "Upload":
     # Handle image upload (existing logic)
-    uploaded_file = st.file_uploader("Choose an image to compress", type=["jpg", "jpeg", "png","avif"])
+    uploaded_file = st.file_uploader("Choose an image to compress", type=["jpg", "jpeg", "png"])
     # ... (rest of the code for image upload)
     if uploaded_file is not None:
         try:
             image = Image.open(uploaded_file)
+
+            # Convert RGBA image to RGB
+            if image.mode == 'RGBA':
+                image = image.convert('RGB')
 
             # Display the original image
             st.image(image, caption="Original Image", use_column_width=True)
 
             # Compress the image
             quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
-            compressed_image = io.BytesIO()  # Create an empty BytesIO object
-            image.save(compressed_image, format="JPEG", quality=quality)  # Save to BytesIO
+            compressed_image = io.BytesIO()
+            image.save(compressed_image, format="JPEG", quality=quality)
 
             # Download the compressed image
             st.download_button(
                 label="Download Compressed Image",
-                data=compressed_image.getvalue(),  # Access compressed data
+                data=compressed_image.getvalue(),
                 file_name=f"compressed_{uploaded_file.name}",
                 mime="image/jpeg"
             )
@@ -46,7 +50,7 @@ if upload_or_url == "Upload":
 
 else:
     # Handle image URL input
-    image_url = st.text_input("Enter image URL")
+    image_url = st.text_input("Enter image URL", placeholder="paste the URL of the image")
 
     if image_url:
         try:
@@ -55,6 +59,10 @@ else:
 
             # Open the image from the response stream
             image = Image.open(response.raw)
+
+            # Convert RGBA image to RGB
+            if image.mode == 'RGBA':
+                image = image.convert('RGB')
 
             # Display the original image
             st.image(image, caption="Original Image", use_column_width=True)
