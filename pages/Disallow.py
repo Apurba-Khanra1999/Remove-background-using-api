@@ -2,22 +2,20 @@ import streamlit as st
 import pandas as pd
 from datetime import date
 
-
 today = str(date.today())
+
 # Function to read the Excel file and extract URLs from specified column and rows
 def extract_urls(file, column, start_row, end_row):
-    df = pd.read_excel(file)
+    df = pd.read_excel(file, dtype=str)  # Read all data as strings
     urls = df.iloc[start_row - 1:end_row, column].tolist()  # Extract specified rows and column
     return urls
 
-
 # Function to save URLs to a text file in the desired format
 def save_to_textfile(urls, filename=f'disallow_{today}.txt'):
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding="utf-8") as f:
         for url in urls:
             f.write(f"Disallow: {url}\n")
     return filename
-
 
 # Streamlit app
 st.title("URL Extractor and Formatter")
@@ -25,7 +23,7 @@ st.title("URL Extractor and Formatter")
 uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
 
 if uploaded_file is not None:
-    df = pd.read_excel(uploaded_file)
+    df = pd.read_excel(uploaded_file, dtype=str)  # Read all data as strings
     st.write("Preview of the uploaded file:")
     st.write(df)
 
@@ -40,5 +38,5 @@ if uploaded_file is not None:
         urls = extract_urls(uploaded_file, column, start_row, end_row)
         text_file = save_to_textfile(urls)
         st.success(f"Text file {text_file} generated successfully!")
-        with open(text_file, 'r') as file:
+        with open(text_file, 'r', encoding="utf-8") as file:
             st.download_button('Download text file', file, file_name=text_file)
