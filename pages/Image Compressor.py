@@ -1,10 +1,10 @@
 import streamlit as st
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image
 import io
 import requests
 
 st.set_page_config(
-    page_title="Remove AI",
+    page_title="Image Compressor",
     page_icon="🤖",
     layout="wide",
 )
@@ -15,72 +15,79 @@ st.title("Image Compressor")
 upload_or_url = st.radio("Choose how to provide the image:", ("Upload", "Enter URL"))
 
 if upload_or_url == "Upload":
-    # Handle image upload (existing logic)
-    uploaded_file = st.file_uploader("Choose an image to compress", type=["jpg", "jpeg", "png"])
-    # ... (rest of the code for image upload)
-    if uploaded_file is not None:
-        try:
-            image = Image.open(uploaded_file)
+    # Handle multiple image uploads
+    uploaded_files = st.file_uploader("Choose images to compress", type=["jpg", "jpeg", "png"],
+                                      accept_multiple_files=True)
 
-            # Convert RGBA image to RGB
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
+    if uploaded_files:
+        quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
 
-            # Display the original image
-            st.image(image, caption="Original Image", use_column_width=True)
+        for uploaded_file in uploaded_files:
+            try:
+                image = Image.open(uploaded_file)
 
-            # Compress the image
-            quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
-            compressed_image = io.BytesIO()
-            image.save(compressed_image, format="JPEG", quality=quality)
+                # Convert RGBA image to RGB
+                if image.mode == 'RGBA':
+                    image = image.convert('RGB')
 
-            # Download the compressed image
-            st.download_button(
-                label="Download Compressed Image",
-                data=compressed_image.getvalue(),
-                file_name=f"compressed_{uploaded_file.name}",
-                mime="image/jpeg"
-            )
+                # Display the original image
+                st.image(image, caption=f"Original Image: {uploaded_file.name}", use_column_width=True)
 
-        except Exception as e:
-            st.error(f"Error processing image: {e}")
-    else:
-        st.write("Please upload an image first.")
+                # Compress the image
+                compressed_image = io.BytesIO()
+                image.save(compressed_image, format="JPEG", quality=quality)
+                compressed_image.seek(0)
 
+                # Download the compressed image
+                st.download_button(
+                    label=f"Download Compressed Image: {uploaded_file.name}",
+                    data=compressed_image,
+                    file_name=f"compressed_{uploaded_file.name}",
+                    mime="image/jpeg"
+                )
+
+            except Exception as e:
+                st.error(f"Error processing image {uploaded_file.name}: {e}")
 
 else:
     # Handle image URL input
-    image_url = st.text_input("Enter image URL", placeholder="paste the URL of the image")
+    image_urls = st.text_area("Enter image URLs (one per line)", placeholder="paste the URLs of the images")
 
-    if image_url:
-        try:
-            response = requests.get(image_url, stream=True)
-            response.raise_for_status()  # Raise an exception for error status codes
+    if image_urls:
+        urls = image_urls.split("\n")
+        quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
 
-            # Open the image from the response stream
-            image = Image.open(response.raw)
+        for url in urls:
+            url = url.strip()
+            if url:
+                try:
+                    response = requests.get(url, stream=True)
+                    response.raise_for_status()  # Raise an exception for error status codes
 
-            # Convert RGBA image to RGB
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
+                    # Open the image from the response stream
+                    image = Image.open(response.raw)
 
-            # Display the original image
-            st.image(image, caption="Original Image", use_column_width=True)
+                    # Convert RGBA image to RGB
+                    if image.mode == 'RGBA':
+                        image = image.convert('RGB')
 
-            # Compress the image (same logic as before)
-            quality = st.slider("Compression Quality", min_value=1, max_value=95, value=75, step=1)
-            compressed_image = io.BytesIO()
-            image.save(compressed_image, format="JPEG", quality=quality)
+                    # Display the original image
+                    st.image(image, caption=f"Original Image: {url.split('/')[-1]}", use_column_width=True)
 
-            # Download the compressed image
-            st.download_button(
-                label="Download Compressed Image",
-                data=compressed_image.getvalue(),
-                file_name=f"compressed_{image_url.split('/')[-1]}",  # Use filename from URL
-                mime="image/jpeg"
-            )
+                    # Compress the image
+                    compressed_image = io.BytesIO()
+                    image.save(compressed_image, format="JPEG", quality=quality)
+                    compressed_image.seek(0)
 
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error fetching image from URL: {e}")
-        except Exception as e:
-            st.error(f"Error processing image: {e}")
+                    # Download the compressed image
+                    st.download_button(
+                        label=f"Download Compressed Image: {url.split('/')[-1]}",
+                        data=compressed_image,
+                        file_name=f"compressed_{url.split('/')[-1]}",
+                        mime="image/jpeg"
+                    )
+
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error fetching image from URL {url}: {e}")
+                except Exception as e:
+                    st.error(f"Error processing image from URL {url}: {e}")
