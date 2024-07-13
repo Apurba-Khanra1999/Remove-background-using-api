@@ -24,6 +24,8 @@ def convert_webp_to_jpg(uploaded_file):
     except OSError:
         raise ValueError("Uploaded file is not a valid WEBP image.")
 
+st.page_link("Home.py", label="H O M E", icon="🏡")
+st.divider()
 st.title("WEBP to JPG Converter")
 uploaded_file = st.file_uploader("Choose a WEBP image to convert:", type=['webp','png'])
 

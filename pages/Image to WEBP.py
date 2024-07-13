@@ -16,6 +16,8 @@ def convert_to_webp(image_data):
   image.save(out_buffer, format='WEBP')
   return out_buffer.getvalue()
 
+st.page_link("Home.py", label="H O M E", icon="🏡")
+st.divider()
 st.title("Image to WEBP Converter")
 
 uploaded_files = st.file_uploader("Choose multiple images to convert:", accept_multiple_files=True, type=["jpg", "jpeg", "png"])

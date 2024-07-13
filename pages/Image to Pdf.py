@@ -21,6 +21,8 @@ def convert_images_to_pdf(image_files):
 
 
 def main():
+    st.page_link("Home.py", label="H O M E", icon="🏡")
+    st.divider()
     st.title("Image to PDF Converter")
     st.write("Upload images to convert them into a single PDF file.")
 

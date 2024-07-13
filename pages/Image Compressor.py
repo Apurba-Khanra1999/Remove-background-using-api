@@ -8,7 +8,8 @@ st.set_page_config(
     page_icon="🤖",
     layout="wide",
 )
-
+st.page_link("Home.py", label="H O M E", icon="🏡")
+st.divider()
 st.title("Image Compressor")
 
 # Option for image upload or URL input
