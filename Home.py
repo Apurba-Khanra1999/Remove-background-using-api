@@ -6,6 +6,7 @@ st.set_page_config(
     page_title="Tool Box",
     page_icon="🧊",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 st.logo(icon_image="logo.png", image="logofull.png")
 st.title('Our Products')
