@@ -1,16 +1,13 @@
 import streamlit as st
 from PIL import Image
 import io
-
+st.set_page_config(
+    page_title="Tool Box",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 def convert_to_webp(image_data):
-  """Converts an image in byte format to WEBP format.
-
-  Args:
-      image_data: The image data in byte format.
-
-  Returns:
-      A byte array containing the converted WEBP image data.
-  """
   image = Image.open(io.BytesIO(image_data))
   out_buffer = io.BytesIO()
   image.save(out_buffer, format='WEBP')

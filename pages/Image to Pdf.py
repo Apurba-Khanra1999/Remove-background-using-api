@@ -2,7 +2,12 @@ import streamlit as st
 from PIL import Image
 from fpdf import FPDF
 
-
+st.set_page_config(
+    page_title="Tool Box",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 class PDF(FPDF):
     def header(self):
         pass

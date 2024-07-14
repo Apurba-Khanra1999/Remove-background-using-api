@@ -2,7 +2,12 @@ import streamlit as st
 from zipfile import ZipFile
 from io import BytesIO
 
-
+st.set_page_config(
+    page_title="Tool Box",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 # Function to create a zip file in memory
 def create_zip(files):
     zip_buffer = BytesIO()

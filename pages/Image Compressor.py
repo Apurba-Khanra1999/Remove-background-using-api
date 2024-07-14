@@ -4,9 +4,10 @@ import io
 import requests
 
 st.set_page_config(
-    page_title="Image Compressor",
-    page_icon="🤖",
+    page_title="Tool Box",
+    page_icon="🧊",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 st.page_link("Home.py", label="H O M E", icon="🏡")
 st.divider()

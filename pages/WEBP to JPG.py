@@ -3,6 +3,12 @@ import io
 import streamlit as st
 from PIL import Image
 
+st.set_page_config(
+    page_title="Tool Box",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 def convert_webp_to_jpg(uploaded_file):
     try:
         # Open the uploaded file in binary mode

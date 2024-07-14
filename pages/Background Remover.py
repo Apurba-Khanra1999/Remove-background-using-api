@@ -5,9 +5,10 @@ import streamlit as st
 API_KEY = 'NAJbdpgiji8hrV9gTw1oH99g'
 
 st.set_page_config(
-    page_title="Background Remover",
-    page_icon="",
+    page_title="Tool Box",
+    page_icon="🧊",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 st.page_link("Home.py", label="H O M E", icon="🏡")
 st.divider()
