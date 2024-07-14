@@ -69,6 +69,16 @@ with col6:
         if st.button("WEBP to JPG"):
             st.switch_page("pages/WEBP to JPG.py")
 
+with col7:
+    with st.container( border= True):
+        left, right = st.columns([1, 4])
+        with left:
+            st.image('doc.png',width=30)
+        with right:
+            st.write('Convert any PDF into Word file')
+        if st.button("PDF to Word"):
+            st.switch_page("pages/PDF to Word.py")
+
 
 st.divider()
 st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
