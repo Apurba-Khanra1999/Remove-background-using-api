@@ -9,6 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 st.logo(icon_image="logo.png", image="logofull.png")
+st.image('header.png')
 st.title('Our Products')
 st.write('')
 col1, col2, col3, col4 =st.columns(4)
@@ -79,7 +80,18 @@ with col7:
         if st.button("PDF to Word"):
             st.switch_page("pages/PDF to Word.py")
 
+with col8:
+    with st.container( border= True):
+        left, right = st.columns([1, 4])
+        with left:
+            st.image('merge.png',width=30)
+        with right:
+            st.write('Merge multiple pdfs into one.')
+        if st.button("Merge PDFs"):
+            st.switch_page("pages/Merge PDFs.py")
+
 
 st.divider()
-st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
-st.markdown('📩 Contact me - apurbakhanra09@gmail.com', unsafe_allow_html=True)
+# st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
+# st.markdown('📩 Contact me - apurbakhanra09@gmail.com', unsafe_allow_html=True)
+st.image('footer.png')
