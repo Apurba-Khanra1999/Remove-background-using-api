@@ -90,6 +90,16 @@ with col8:
         if st.button("Merge PDFs"):
             st.switch_page("pages/Merge PDFs.py")
 
+col9, col10, col11, col12 =st.columns(4)
+with col9:
+    with st.container( border= True):
+        left, right = st.columns([1, 4])
+        with left:
+            st.image('compresspdf.png',width=30)
+        with right:
+            st.write('Compress multiple pdfs into one.')
+        if st.button("Compress PDFs"):
+            st.switch_page("pages/Compress PDF.py")
 
 st.divider()
 # st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
