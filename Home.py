@@ -101,6 +101,15 @@ with col9:
         if st.button("Compress PDFs"):
             st.switch_page("pages/Compress PDF.py")
 
+with col10:
+    with st.container( border= True):
+        left, right = st.columns([1, 4])
+        with left:
+            st.image('pdftoimage.png',width=30)
+        with right:
+            st.write('Convert pdf file to image format')
+        if st.button("PDF to Image"):
+            st.switch_page("pages/PDFs to Images.py")
 st.divider()
 # st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
 # st.markdown('📩 Contact me - apurbakhanra09@gmail.com', unsafe_allow_html=True)
