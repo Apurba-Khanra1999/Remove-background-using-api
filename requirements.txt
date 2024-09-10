@@ -11,3 +11,4 @@ pikepdf
 fpdf
 pdfkit
 openpyxl
+opencv-python
