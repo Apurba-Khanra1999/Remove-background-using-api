@@ -11,6 +11,5 @@ pikepdf
 fpdf
 pdfkit
 openpyxl
-PIL
 easyocr
 torch
