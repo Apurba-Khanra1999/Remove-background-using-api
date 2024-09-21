@@ -1,57 +1,45 @@
 import streamlit as st
-from pikepdf import Pdf
+import pandas as pd
+import pdfkit
 import os
-import tempfile
-import shutil
+import zipfile
+from datetime import datetime
 
+def convert_to_pdf(file):
+    # Convert Excel file to PDF
+    pdf_path = os.path.splitext(file.name)[0] + ".pdf"
+    pdfkit.from_file(file.name, pdf_path)
+    return pdf_path
 
-def compress_pdf(file, quality):
-    input_pdf = Pdf.open(file)
+def create_zip(pdf_paths):
+    # Create a zip file with the current date and time in the filename
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    zip_filename = f"converted_files_{now}.zip"
+    with zipfile.ZipFile(zip_filename, "w") as zip_file:
+        for pdf_path in pdf_paths:
+            zip_file.write(pdf_path)
+    return zip_filename
 
-    # Create a temporary file for the compressed PDF
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-        temp_file_path = temp_file.name
+st.title("Excel to PDF Converter")
 
-    # Simulate compression by lowering the quality parameter
-    compression_quality = (100 - quality) / 100
+uploaded_files = st.file_uploader("Choose Excel files", type=["xlsx"], accept_multiple_files=True)
 
-    # Save the PDF to the temporary file
-    with Pdf.new() as output_pdf:
-        for page in input_pdf.pages:
-            output_pdf.pages.append(page)
-        output_pdf.save(temp_file_path, compress_streams=True)
+if uploaded_files:
+    pdf_paths = []
+    with st.spinner("Converting files to PDF..."):
+        for file in uploaded_files:
+            pdf_path = convert_to_pdf(file)
+            pdf_paths.append(pdf_path)
+    st.success("Files converted successfully!")
 
-    # Return the path and file size
-    file_size = os.path.getsize(temp_file_path)
-    return temp_file_path, file_size
+    zip_filename = create_zip(pdf_paths)
+    st.download_button(
+        label="Download ZIP",
+        data=open(zip_filename, "rb"),
+        file_name=zip_filename,
+        mime="application/zip",
+    )
 
-
-def main():
-    st.title("PDF Compressor")
-
-    pdf_file = st.file_uploader("Upload a PDF", type=["pdf"])
-
-    if pdf_file is not None:
-        quality = st.slider("Select Compression Quality", 1, 100, 50)
-
-        if st.button("Compress PDF"):
-            with st.spinner("Compressing..."):
-                compressed_file, file_size = compress_pdf(pdf_file, quality)
-                st.success("Compression Complete!")
-                st.write(f"Approximate File Size: {file_size / 1024:.2f} KB")
-
-                # Provide download link
-                with open(compressed_file, "rb") as f:
-                    st.download_button(
-                        label="Download Compressed PDF",
-                        data=f,
-                        file_name=os.path.basename(compressed_file),
-                        mime="application/pdf"
-                    )
-
-                # Clean up temporary file
-                os.remove(compressed_file)
-
-
-if __name__ == "__main__":
-    main()
+    for pdf_path in pdf_paths:
+        os.remove(pdf_path)
+    os.remove(zip_filename)
