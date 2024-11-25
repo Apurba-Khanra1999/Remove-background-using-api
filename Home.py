@@ -121,6 +121,16 @@ with col11:
             st.write('Resize any image by Width & Height')
         if st.button("Resize Image"):
             st.switch_page("pages/Resize Image.py")
+
+with col12:
+    with st.container( border= True):
+        left, right = st.columns([1, 4])
+        with left:
+            st.image('pdftoimage.png',width=30)
+        with right:
+            st.write('Convert multiple word files at once')
+        if st.button("Convert"):
+            st.switch_page("pages/Word to PDF.py")
 st.divider()
 # st.markdown('Feel free to suggest an edit 📝', unsafe_allow_html=True)
 # st.markdown('📩 Contact me - apurbakhanra09@gmail.com', unsafe_allow_html=True)
